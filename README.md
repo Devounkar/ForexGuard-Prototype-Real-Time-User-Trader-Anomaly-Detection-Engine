@@ -1,6 +1,5 @@
 # ForexGuard — Real-Time Forex Anomaly Detection Engine
 
-> AI/ML Internship Assessment Submission  
 > Detects suspicious user and trader behaviour across client portal and trading terminal activity, generates explainable risk alerts, and exposes results via a FastAPI REST layer.
 
 ---
