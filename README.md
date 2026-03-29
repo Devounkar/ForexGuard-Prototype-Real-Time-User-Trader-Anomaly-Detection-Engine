@@ -169,32 +169,6 @@ uvicorn[standard]>=0.27
 pydantic>=2.0
 ```
 
-### Step 4 — Create the config file
-
-Create `configs/config.yaml`:
-
-```yaml
-data_generation:
-  n_normal_users: 1000
-  n_anomalous_users: 80
-  events_per_normal_user: 50
-  start_date: "2024-01-01"
-  end_date: "2024-03-31"
-  output_path: "data/events.parquet"
-
-model:
-  model_path: "models/isolation_forest.pkl"
-  scaler_path: "models/scaler.pkl"
-  n_estimators: 200
-  contamination: "auto"
-  max_samples: "auto"
-  random_state: 42
-
-alerts:
-  risk_score_threshold: 0.60
-  output_path: "data/alerts.jsonl"
-```
-
 ---
 
 ## 4. Running the Pipeline
