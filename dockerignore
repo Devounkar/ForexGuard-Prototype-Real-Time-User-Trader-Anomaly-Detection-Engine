@@ -1,0 +1,13 @@
+.git
+.gitignore
+__pycache__
+*.py[cod]
+*.pyo
+.venv
+venv
+env
+.env
+data/
+notebooks/.ipynb_checkpoints
+*.md
+.DS_Store
