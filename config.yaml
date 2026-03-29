@@ -1,0 +1,54 @@
+data_generation:
+  n_normal_users: 2000            # was 500  — 4× increase for better model generalisation
+  n_anomalous_users: 160          # was 50   — maintains ~7.4% contamination rate (160/2160)
+  events_per_normal_user: 150     # kept same as your original — already well sized
+  events_per_anomalous_user: 150  # BUG FIX (volume bias): must equal events_per_normal_user
+                                  # anomaly signal lives in PATTERN (geo-hopping, margin spikes)
+                                  # not in raw event count. Original 80 < 150 reintroduced
+                                  # the volume bias that data_generator.py v2 explicitly fixed.
+  start_date: "2024-01-01"
+  end_date:   "2024-12-31"        # was 2024-03-31 (90 days) — extended to full year so
+                                  # per-day rate normalisation has a stable observation window
+  output_path: "data/synthetic_events.parquet"
+
+currency_pairs:
+  - "EUR/USD"
+  - "GBP/USD"
+  - "USD/JPY"
+  - "AUD/USD"
+  - "USD/CAD"
+  - "NZD/USD"
+  - "EUR/GBP"
+  - "USD/CHF"
+
+streaming:
+  delay_ms: 50                    # unchanged
+  batch_size: 100                 # unchanged
+  window_minutes: 15              # unchanged
+
+feature_engineering:
+  rolling_windows: [5, 15, 60]   # unchanged
+  min_events_for_features: 5     # unchanged
+
+model:
+  contamination: "auto"           # BUG 4 FIX: was 0.08, which exactly matched the true anomaly
+                                  # fraction giving IF an unfair structural advantage over AE.
+                                  # "auto" (sklearn default = 0.1) decouples the IF decision
+                                  # boundary from the true label rate so both models compete fairly.
+  n_estimators: 200               # unchanged
+  max_samples: 256                # was "auto" — fixed size for reproducibility at larger scale
+  random_state: 42                # unchanged
+  model_path:  "data/isolation_forest.pkl"
+  scaler_path: "data/scaler.pkl"
+  anomaly_threshold: -0.1        # unchanged — kept for reference / dashboard use
+
+alerts:
+  risk_score_threshold: 0.55      # was 0.65 — relaxed slightly to account for larger, more
+                                  # diverse population where scores are more spread out
+  output_path: "data/alerts.jsonl"
+  max_alerts_display: 100        # unchanged
+
+dashboard:
+  refresh_interval: 3            # unchanged
+  top_n_users: 20                # unchanged
+  port: 8501                     # unchanged
